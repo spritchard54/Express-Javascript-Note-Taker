@@ -2,33 +2,35 @@ const express = require('express');
 const fs = require('fs');
 const util = require('util');
 const path = require('path');
-const uuid = require('./helpers/uuid');
+const uuid = require('./Develop/helpers/uuid');
 const app = express();
-const dataBase = require('./db/db.json');
+const dataBase = require('./Develop/db/db.json');
 const PORT = 3001;
 
-app.use(express.static('public'));
+
+app.use(express.static('./develop/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // --------------------------- Get starts here ------------------------------------
 
-// Retrieves /notes when you click 'Get Started' Button on 'index.html'
-app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'notes.html'));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './Develop/public', 'index.html'));
     // Log our request to the terminal
-    console.info(`${req.method} request received`);
+    console.info(`${req.method} 1. app.get('/' index.html request received`);
 });
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// Retrieves /notes when you click 'Get Started' Button on 'index.html'
+app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, './Develop/public', 'notes.html'));
     // Log our request to the terminal
-    console.info(`${req.method} request received`);
+    console.info(`${req.method} 2. app.get('/notes.html request received`);
 });
 
 // GET notes from json file and display old notes on /notes.html
-app.get('/api/notes', (req, res) => {
-    res.json(dataBase);
+app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, "./Develop/db", 'db.json'));
+    console.info(`${req.method} 3. /api/notes received`);
 });
 
 // --------------------------- Post starts here ------------------------------------
