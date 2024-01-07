@@ -34,8 +34,8 @@ app.get('/api/notes', (req, res) => {
 
 // --------------------------- Post starts here ------------------------------------
 
-app.post('/api/notes', async (req, res) => {
-  const oldNotes = JSON.parse(fs.readFileSync('./db/db.json', 'utf-8'))
+app.post('/api/notes', (req, res) => {
+  const oldNotes = JSON.parse(fs.readFileSync('./Develop/db/db.json', 'utf-8'))
   const { title, text } = req.body
 
   if (title && text) {
@@ -46,8 +46,10 @@ app.post('/api/notes', async (req, res) => {
       text
     }
 
+    console.log(newNote);
+
     oldNotes.push(newNote)
-    fs.writeFileSync('db/db.json', JSON.stringify(oldNotes))
+    fs.writeFileSync('./Develop/db/db.json', JSON.stringify(oldNotes))
     res.json(oldNotes)
 
     // Log our request to the terminal
@@ -68,7 +70,7 @@ app.post('/api/notes', async (req, res) => {
 
 
 // deletes old notes /:id = request paramter
-app.delete('/notes/:id', (req, res) => {
+app.delete('api/notes/:id', (req, res) => {
   console.log('app.delete')
   const id = req.params.id
   const oldNotes = JSON.parse(fs.readFileSync('db.json'))
@@ -76,7 +78,7 @@ app.delete('/notes/:id', (req, res) => {
   const index = oldNotes.findIndex(record => record.id === parseInt(id))
   if (index !== -1) {
     // Remove the record from the array
-    data.splice(index, 1)
+    oldNotes.splice(index, 1)
     res.status(200).json({ message: 'Record deleted successfully' })
   } else {
     res.status(404).json({ message: 'Record not found' })
