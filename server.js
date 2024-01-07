@@ -5,9 +5,10 @@ const path = require('path')
 const uuid = require('./Develop/helpers/uuid')
 const app = express()
 const dataBase = require('./Develop/db/db.json')
+const { title } = require('process')
 const PORT = process.env.PORT || 3001
 
-app.use(express.static('./develop/public'))
+app.use(express.static(__dirname + '/develop/public'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
@@ -53,7 +54,7 @@ app.post('/api/notes', (req, res) => {
     res.json(oldNotes)
 
     // Log our request to the terminal
-    console.info(`${req.method} request received`)
+    console.info(`newNote ${req.method} request received`)
     const response = {
       status: 'success',
       body: newNote
@@ -65,17 +66,13 @@ app.post('/api/notes', (req, res) => {
   }
 })
 
-
-
-
-
 // deletes old notes /:id = request paramter
 app.delete('api/notes/:id', (req, res) => {
-  console.log('app.delete')
   const id = req.params.id
   const oldNotes = JSON.parse(fs.readFileSync('db.json'))
+  console.log(oldNotes);
   // Find the index of the record with the given id
-  const index = oldNotes.findIndex(record => record.id === parseInt(id))
+  const index = oldNotes.findIndex(title => title.id === parseInt(id))
   if (index !== -1) {
     // Remove the record from the array
     oldNotes.splice(index, 1)
