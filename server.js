@@ -67,19 +67,12 @@ app.post('/api/notes', (req, res) => {
 })
 
 // deletes old notes /:id = request paramter
-app.delete('api/notes/:id', (req, res) => {
+app.delete('/api/notes/:id', (req, res) => {
   const id = req.params.id
-  const oldNotes = JSON.parse(fs.readFileSync('db.json'))
-  console.log(oldNotes);
-  // Find the index of the record with the given id
-  const index = oldNotes.findIndex(title => title.id === parseInt(id))
-  if (index !== -1) {
-    // Remove the record from the array
-    oldNotes.splice(index, 1)
-    res.status(200).json({ message: 'Record deleted successfully' })
-  } else {
-    res.status(404).json({ message: 'Record not found' })
-  }
+  const oldNotes = JSON.parse(fs.readFileSync('./db/db.json'))
+  const filteredNotes = oldNotes.filter((note) => note.id !== id)
+  fs.writeFileSync('./db/db.json',JSON.stringify(filteredNotes))
+  res.json({ok: true});
 })
 
 app.listen(PORT, () =>
